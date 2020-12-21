@@ -58,6 +58,16 @@ resource "google_dns_record_set" "dns_tekton" {
   rrdatas = [google_compute_address.external_ip_ingress.address]
 }
 
+resource "google_dns_record_set" "dns_jupyter" {
+  name = "jupyter.${data.google_dns_managed_zone.env_dns_zone.dns_name}"
+  type = "A"
+  ttl  = 300
+
+  managed_zone = data.google_dns_managed_zone.env_dns_zone.name
+
+  rrdatas = [google_compute_address.external_ip_ingress.address]
+}
+
 
 # grafana.dmilangcp.xyz
 output external_ip_ingress {
