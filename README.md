@@ -1,6 +1,7 @@
 helm upgrade --install  ingress-nginx ingress-nginx/ingress-nginx \
     --namespace ingress-nginx --create-namespace \
-    -f  values/values-ingress-nginx.yaml --set controller.service.loadBalancerIP="35.192.177.124"
+    -f  ../iac-gcp/values/values-ingress-nginx.yaml \
+    --set controller.service.loadBalancerIP="34.71.216.171" 
 
 helm install \
   cert-manager jetstack/cert-manager \
