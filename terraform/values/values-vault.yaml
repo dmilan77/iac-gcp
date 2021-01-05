@@ -265,10 +265,10 @@ server:
 
   # extraEnvironmentVars is a list of extra environment variables to set with the stateful set. These could be
   # used to include variables required for auto-unseal.
-  extraEnvironmentVars: {}
-    # GOOGLE_REGION: global
-    # GOOGLE_PROJECT: myproject
-    # GOOGLE_APPLICATION_CREDENTIALS: /vault/userconfig/myproject/myproject-creds.json
+  extraEnvironmentVars:
+    # GOOGLE_REGION: us
+    GOOGLE_PROJECT: data-protection-01
+    GOOGLE_APPLICATION_CREDENTIALS: /vault/userconfig/privatekey
 
   # extraSecretEnvironmentVars is a list of extra environment variables to set with the stateful set.
   # These variables take value from existing Secret objects.
@@ -284,25 +284,25 @@ server:
   # to Vault in the path `/vault/userconfig/<name>/`. The value below is
   # an array of objects, examples are shown below.
   extraVolumes: []
-    # - type: secret (or "configMap")
-    #   name: my-secret
-    #   path: null # default is `/vault/userconfig`
+    # - type: secret
+    #   name: gcp-key
+    #   path: privatekey # default is `/vault/userconfig`
 
   # volumes is a list of volumes made available to all containers. These are rendered
   # via toYaml rather than pre-processed like the extraVolumes value.
   # The purpose is to make it easy to share volumes between containers.
-  volumes: null
-  #   - name: plugins
-  #     emptyDir: {}
+  volumes:
+    - name: gcp-key
+      secret:
+        secretName: gcp-key
 
   # volumeMounts is a list of volumeMounts for the main server container. These are rendered
   # via toYaml rather than pre-processed like the extraVolumes value.
   # The purpose is to make it easy to share volumes between containers.
-  volumeMounts: null
-  #   - mountPath: /usr/local/libexec/vault
-  #     name: plugins
-  #     readOnly: true
-
+  volumeMounts:
+    - name: gcp-key
+      mountPath: /vault/userconfig
+      readOnly: true
 
   # Affinity Settings
   # Commenting out or setting as empty the affinity variable, will allow
@@ -523,6 +523,7 @@ server:
       
       storage "gcs" {
         bucket = "dmilan-xyz-gcp-vault-01"
+        ha_enabled = "true"
       }
 
       service_registration "kubernetes" {}

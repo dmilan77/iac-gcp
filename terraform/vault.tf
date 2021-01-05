@@ -2,7 +2,9 @@ resource "google_storage_bucket" "vault_gcs" {
   name          = "dmilan-xyz-gcp-vault-01"
   location      = "US"
   force_destroy = true
-
+  lifecycle {
+    prevent_destroy = false
+  }
   # lifecycle_rule {
   #   condition {
   #     age = 3
@@ -48,7 +50,7 @@ resource "google_kms_key_ring" "main_keyring" {
   name     = "main-keyring-01"
   location = "global"
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 }
 
@@ -58,7 +60,7 @@ resource "google_kms_crypto_key" "vault_key" {
   rotation_period = "100000s"
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 }
 

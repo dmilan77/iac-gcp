@@ -66,7 +66,7 @@ resource "null_resource" "vault_helm" {
         helm upgrade --install  \
         vault hashicorp/vault --wait --timeout 900s \
         --namespace vault --create-namespace \
-        -f  values/values-vault.yaml 
+        -f  values/values-vault.yaml
       EOT
     interpreter = ["bash", "-c"]
   }
