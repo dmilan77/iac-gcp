@@ -522,7 +522,7 @@ server:
       }
       
       storage "gcs" {
-        bucket = "dmilan-xyz-gcp-vault"
+        bucket = "dmilan-xyz-gcp-vault-01"
       }
 
       service_registration "kubernetes" {}

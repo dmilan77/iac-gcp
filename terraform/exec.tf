@@ -56,3 +56,21 @@ resource "null_resource" "letsencrypt" {
 }
 
 
+resource "null_resource" "vault_helm" {
+  provisioner "local-exec" {
+    command = <<EOT
+        kubectl create ns vault; \
+        kubectl -n vault create secret generic gcp-key \
+        --from-file=privatekey=.tout/vault_service_account_key.json; \
+        helm repo add hashicorp https://helm.releases.hashicorp.com; \
+        helm upgrade --install  \
+        vault hashicorp/vault --wait --timeout 900s \
+        --namespace vault --create-namespace \
+        -f  values/values-vault.yaml 
+      EOT
+    interpreter = ["bash", "-c"]
+  }
+  depends_on = [
+    null_resource.glcoud-credentials
+  ]
+}
